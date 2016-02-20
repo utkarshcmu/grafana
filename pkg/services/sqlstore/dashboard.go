@@ -18,6 +18,7 @@ func init() {
 	bus.AddHandler("sql", DeleteDashboard)
 	bus.AddHandler("sql", SearchDashboards)
 	bus.AddHandler("sql", GetDashboardTags)
+	bus.AddHandler("sql", GetDashboardsOfUser)
 }
 
 func SaveDashboard(cmd *m.SaveDashboardCommand) error {
@@ -254,4 +255,22 @@ func GetDashboards(query *m.GetDashboardsQuery) error {
 	}
 
 	return nil
+}
+
+func GetDashboardsOfUser(query *m.GetDashboardsOfUserQuery) error {
+	if query.UserId < 1 {
+		return m.ErrCommandValidationFailed
+	}
+
+	var dashboards = make([]m.Dashboard, 0)
+	sess := x.Cols("id", "slug", "title").Where("created_by=?", query.UserId)
+
+	if query.OrgId > 0 {
+		sess.And("org_id=?", query.OrgId)
+	}
+
+	err := sess.Find(&dashboards)
+	query.Result = &dashboards
+
+	return err
 }

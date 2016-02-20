@@ -204,3 +204,16 @@ func GetDashboardTags(c *middleware.Context) {
 
 	c.JSON(200, query.Result)
 }
+
+func GetDashboardsOfUser(c *middleware.Context) {
+	userId := c.ParamsInt64(":userId")
+	orgId := c.QueryInt64("org_id")
+
+	query := m.GetDashboardsOfUserQuery{UserId: userId, OrgId: orgId}
+	if err := bus.Dispatch(&query); err != nil {
+		c.JsonApiErr(404, "No dashboards found for user", nil)
+		return
+	}
+
+	c.JSON(200, query.Result)
+}

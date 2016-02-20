@@ -193,6 +193,7 @@ func Register(r *macaron.Macaron) {
 			r.Get("/home", GetHomeDashboard)
 			r.Get("/tags", GetDashboardTags)
 			r.Post("/import", bind(dtos.ImportDashboardCommand{}), wrap(ImportDashboard))
+			r.Combo("/user/:userId").Get(GetDashboardsOfUser)
 		})
 
 		// Dashboard snapshots

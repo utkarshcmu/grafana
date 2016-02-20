@@ -148,3 +148,9 @@ type GetDashboardsQuery struct {
 	DashboardIds []int64
 	Result       *[]Dashboard
 }
+
+type GetDashboardsOfUserQuery struct {
+	UserId int64
+	OrgId  int64
+	Result *[]Dashboard
+}
