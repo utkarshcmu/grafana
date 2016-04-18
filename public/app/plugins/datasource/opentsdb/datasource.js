@@ -402,10 +402,11 @@ function (angular, _, dateMath) {
           }
         }
       } else {
-        query.tags = angular.copy(target.tags);
-        if(query.tags){
-          for(var tag_key in query.tags){
-            query.tags[tag_key] = templateSrv.replace(query.tags[tag_key], options.scopedVars, 'pipe');
+        if(target.tags){
+          query.tags = {};
+          for(var key in target.tags){
+            var tagkey = templateSrv.replace(key, options.scopedVars, 'pipe');
+            query.tags[tagkey] = templateSrv.replace(target.tags[key], options.scopedVars, 'pipe');
           }
         }
       }
