@@ -84,7 +84,7 @@ func sendWebRequestSync(ctx context.Context, webhook *Webhook) error {
 	}
 	defer resp.Body.Close()
 
-	webhookLog.Info("Webhook failed", "statuscode", resp.Status, "body", string(body))
+	webhookLog.Debug("Webhook failed", "statuscode", resp.Status, "body", string(body))
 	return fmt.Errorf("Webhook response status %v", resp.Status)
 }
 
