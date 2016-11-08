@@ -89,6 +89,7 @@ export class AlertTabCtrl {
     switch (type) {
       case "email": return "fa fa-envelope";
       case "slack": return "fa fa-slack";
+      case "hipchat": return "fa fa-hipchat";
       case "webhook": return "fa fa-cubes";
     }
   }
