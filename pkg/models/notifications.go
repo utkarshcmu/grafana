@@ -17,19 +17,21 @@ type SendEmailCommandSync struct {
 }
 
 type SendWebhook struct {
-	Url        string
-	User       string
-	Password   string
-	Body       string
-	HttpMethod string
+	Url         string
+	User        string
+	Password    string
+	Body        string
+	HttpMethod  string
+	ContentType string
 }
 
 type SendWebhookSync struct {
-	Url        string
-	User       string
-	Password   string
-	Body       string
-	HttpMethod string
+	Url         string
+	User        string
+	Password    string
+	Body        string
+	HttpMethod  string
+	ContentType string
 }
 
 type SendResetPasswordEmailCommand struct {

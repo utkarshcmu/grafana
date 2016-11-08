@@ -15,11 +15,12 @@ import (
 )
 
 type Webhook struct {
-	Url        string
-	User       string
-	Password   string
-	Body       string
-	HttpMethod string
+	Url         string
+	User        string
+	Password    string
+	Body        string
+	HttpMethod  string
+	ContentType string
 }
 
 var webhookQueue chan *Webhook
@@ -64,6 +65,10 @@ func sendWebRequestSync(ctx context.Context, webhook *Webhook) error {
 		return err
 	}
 
+	if webhook.ContentType != "" {
+		request.Header.Set("Content-Type", webhook.ContentType)
+	}
+
 	resp, err := ctxhttp.Do(ctx, client, request)
 	if err != nil {
 		return err
@@ -79,7 +84,7 @@ func sendWebRequestSync(ctx context.Context, webhook *Webhook) error {
 	}
 	defer resp.Body.Close()
 
-	webhookLog.Debug("Webhook failed", "statuscode", resp.Status, "body", string(body))
+	webhookLog.Info("Webhook failed", "statuscode", resp.Status, "body", string(body))
 	return fmt.Errorf("Webhook response status %v", resp.Status)
 }
 
