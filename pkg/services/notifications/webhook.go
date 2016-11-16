@@ -15,11 +15,12 @@ import (
 )
 
 type Webhook struct {
-	Url        string
-	User       string
-	Password   string
-	Body       string
-	HttpMethod string
+	Url         string
+	User        string
+	Password    string
+	Body        string
+	HttpMethod  string
+	ContentType string
 }
 
 var webhookQueue chan *Webhook
@@ -62,6 +63,10 @@ func sendWebRequestSync(ctx context.Context, webhook *Webhook) error {
 
 	if err != nil {
 		return err
+	}
+
+	if webhook.ContentType != "" {
+		request.Header.Set("Content-Type", webhook.ContentType)
 	}
 
 	resp, err := ctxhttp.Do(ctx, client, request)
