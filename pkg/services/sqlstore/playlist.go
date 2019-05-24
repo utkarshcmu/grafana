@@ -19,6 +19,7 @@ func CreatePlaylist(cmd *m.CreatePlaylistCommand) error {
 		Name:     cmd.Name,
 		Interval: cmd.Interval,
 		OrgId:    cmd.OrgId,
+		Type:     cmd.Type,
 	}
 
 	_, err := x.Insert(&playlist)
@@ -49,6 +50,7 @@ func UpdatePlaylist(cmd *m.UpdatePlaylistCommand) error {
 		OrgId:    cmd.OrgId,
 		Name:     cmd.Name,
 		Interval: cmd.Interval,
+		Type:     cmd.Type,
 	}
 
 	existingPlaylist := x.Where("id = ? AND org_id = ?", cmd.Id, cmd.OrgId).Find(m.Playlist{})
@@ -62,9 +64,10 @@ func UpdatePlaylist(cmd *m.UpdatePlaylistCommand) error {
 		OrgId:    playlist.OrgId,
 		Name:     playlist.Name,
 		Interval: playlist.Interval,
+		Type:     cmd.Type,
 	}
 
-	_, err := x.ID(cmd.Id).Cols("name", "interval").Update(&playlist)
+	_, err := x.ID(cmd.Id).Cols("name", "interval", "type").Update(&playlist)
 
 	if err != nil {
 		return err

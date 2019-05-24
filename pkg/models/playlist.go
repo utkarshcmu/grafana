@@ -69,6 +69,7 @@ type UpdatePlaylistCommand struct {
 	Name     string            `json:"name" binding:"Required"`
 	Interval string            `json:"interval"`
 	Items    []PlaylistItemDTO `json:"items"`
+	Type     string            `json:"type"`
 
 	Result *PlaylistDTO
 }
@@ -77,6 +78,7 @@ type CreatePlaylistCommand struct {
 	Name     string            `json:"name" binding:"Required"`
 	Interval string            `json:"interval"`
 	Items    []PlaylistItemDTO `json:"items"`
+	Type     string            `json:"type"`
 
 	OrgId  int64 `json:"-"`
 	Result *Playlist
