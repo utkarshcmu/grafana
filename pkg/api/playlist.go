@@ -77,6 +77,7 @@ func GetPlaylist(c *m.ReqContext) Response {
 		Interval: cmd.Result.Interval,
 		OrgId:    cmd.Result.OrgId,
 		Items:    playlistDTOs,
+		Type:     cmd.Result.Type,
 	}
 
 	return JSON(200, dto)

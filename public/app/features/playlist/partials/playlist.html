@@ -5,7 +5,7 @@
 	<h3 class="page-sub-heading" ng-hide="ctrl.isNew">Edit Playlist</h3>
 	<h3 class="page-sub-heading" ng-show="ctrl.isNew">New Playlist</h3>
 
-	<p class="playlist-description">A playlist rotates through a pre-selected list of Dashboards. A Playlist can be a great way to build situational awareness, or just show off your metrics to your team or visitors.</p>
+	<p class="playlist-description">A playlist rotates through either a pre-selected list of Dashboards or a pre-selected list of Template Variables from a Dashboard. A Playlist can be a great way to build situational awareness, or just show off your metrics to your team or visitors.</p>
 
 	<div class="gf-form-group">
 		<div class="gf-form">
@@ -16,9 +16,13 @@
 			<span class="gf-form-label width-7">Interval</span>
 			<input type="text" required ng-model="ctrl.playlist.interval" placeholder="5m" class="gf-form-input max-width-21">
 		</div>
+		<div class="gf-form">
+                        <span class="gf-form-label width-7">Type</span>
+                	<select class="gf-form-input max-width-21" ng-model="ctrl.playlist.type" ng-options="f.value as f.name for f in ctrl.playlistTypes"></select>
+		</div>
 	</div>
 
-	<div class="gf-form-group">
+	<div class="gf-form-group" ng-if="ctrl.playlist.type == 'dash'">
 		<h3 class="page-headering">Dashboards</h3>
 
 		<table class="filter-table playlist-available-list">
@@ -51,7 +55,7 @@
 		</table>
 	</div>
 
-	<div class="gf-form-group">
+	<div class="gf-form-group" ng-if="ctrl.playlist.type == 'dash'">
 		<h3 class="page-headering">Add dashboards</h3>
 		<playlist-search class="playlist-search-container" search-started="ctrl.searchStarted(promise)"></playlist-search>
 

@@ -16,6 +16,7 @@ type Playlist struct {
 	Name     string `json:"name"`
 	Interval string `json:"interval"`
 	OrgId    int64  `json:"-"`
+	Type     string `json:"type"`
 }
 
 type PlaylistDTO struct {
@@ -24,6 +25,7 @@ type PlaylistDTO struct {
 	Interval string            `json:"interval"`
 	OrgId    int64             `json:"-"`
 	Items    []PlaylistItemDTO `json:"items"`
+	Type     string            `json:"type"`
 }
 
 type PlaylistItemDTO struct {

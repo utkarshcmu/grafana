@@ -44,3 +44,22 @@ func addPlaylistMigrations(mg *Migrator) {
 		{Name: "title", Type: DB_Text, Nullable: false},
 	}))
 }
+
+func addPlaylistTypeMigration(mg *Migrator) {
+
+	// Getting existing Playlist Table
+	playlistV2 := Table{
+		Name: "playlist",
+		Columns: []*Column{
+			{Name: "id", Type: DB_BigInt, IsPrimaryKey: true, IsAutoIncrement: true},
+			{Name: "name", Type: DB_NVarchar, Length: 255, Nullable: false},
+			{Name: "interval", Type: DB_NVarchar, Length: 255, Nullable: false},
+			{Name: "org_id", Type: DB_BigInt, Nullable: false},
+		},
+	}
+
+	// Adding a column type
+	mg.AddMigration("Add column type in playlist", NewAddColumnMigration(playlistV2, &Column{
+		Name: "type", Type: DB_NVarchar, Length: 10, Nullable: false, Default: "dash",
+	}))
+}

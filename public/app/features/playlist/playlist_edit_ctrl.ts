@@ -15,6 +15,7 @@ export class PlaylistEditCtrl {
   tagresult: any = [];
   navModel: any;
   isNew: boolean;
+  playlistTypes = [{ name: 'Dashboard Based', value: 'dash' }, { name: 'Variable Based', value: 'vari' }];
 
   /** @ngInject */
   constructor(private $scope, private backendSrv, private $location, $route, navModelSrv) {
