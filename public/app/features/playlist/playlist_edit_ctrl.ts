@@ -16,6 +16,7 @@ export class PlaylistEditCtrl {
   navModel: any;
   isNew: boolean;
   playlistTypes = [{ name: 'Dashboard Based', value: 'dash' }, { name: 'Variable Based', value: 'vari' }];
+  dashForVarPlaylist: any = [];
 
   /** @ngInject */
   constructor(private $scope, private backendSrv, private $location, $route, navModelSrv) {
@@ -129,6 +130,14 @@ export class PlaylistEditCtrl {
 
   movePlaylistItemDown(playlistItem) {
     this.movePlaylistItem(playlistItem, 1);
+  }
+
+  selectDashForVarPlaylist(dashboard) {
+    this.dashForVarPlaylist.push(dashboard);
+  }
+
+  removeDashForVarPlaylist() {
+    this.dashForVarPlaylist.pop();
   }
 }
 
