@@ -17,6 +17,7 @@ export class PlaylistEditCtrl {
   isNew: boolean;
   playlistTypes = [{ name: 'Dashboard Based', value: 'dash' }, { name: 'Variable Based', value: 'vari' }];
   dashForVarPlaylist: any = [];
+  playlistVars: any = [];
 
   /** @ngInject */
   constructor(private $scope, private backendSrv, private $location, $route, navModelSrv) {
@@ -134,10 +135,19 @@ export class PlaylistEditCtrl {
 
   selectDashForVarPlaylist(dashboard) {
     this.dashForVarPlaylist.push(dashboard);
+    this.backendSrv.get('/api/dashboards/uid/' + dashboard.uid).then(result => {
+      this.playlistVars = result.dashboard.templating.list;
+      console.log(result.dashboard.templating.list);
+    });
   }
 
   removeDashForVarPlaylist() {
     this.dashForVarPlaylist.pop();
+  }
+
+  addVarAsPlaylistItem(playlistItem) {
+    console.log(playlistItem);
+    console.log(this.dashForVarPlaylist[0]);
   }
 }
 
