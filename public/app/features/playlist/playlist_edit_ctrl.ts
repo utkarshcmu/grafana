@@ -4,6 +4,8 @@ import coreModule from '../../core/core_module';
 export class PlaylistEditCtrl {
   filteredDashboards: any = [];
   filteredTags: any = [];
+  filteredVars: any = [];
+  selectedDashForVarPlaylist: any = null;
   searchQuery = '';
   loading = false;
   playlist: any = {
@@ -13,11 +15,10 @@ export class PlaylistEditCtrl {
   playlistItems: any = [];
   dashboardresult: any = [];
   tagresult: any = [];
+  varResult: any = [];
   navModel: any;
   isNew: boolean;
   playlistTypes = [{ name: 'Dashboard Based', value: 'dash' }, { name: 'Variable Based', value: 'vari' }];
-  dashForVarPlaylist: any = [];
-  playlistVars: any = [];
 
   /** @ngInject */
   constructor(private $scope, private backendSrv, private $location, $route, navModelSrv) {
@@ -33,6 +34,11 @@ export class PlaylistEditCtrl {
 
       backendSrv.get('/api/playlists/' + playlistId + '/items').then(result => {
         this.playlistItems = result;
+        if (this.playlist.type === 'vari' && this.playlistItems.length > 0) {
+          this.backendSrv.get('/api/dashboards/uid/' + this.playlistItems[0].value).then(result => {
+            this.selectDashForVarPlaylist(result.dashboard);
+          });
+        }
       });
     }
   }
@@ -47,6 +53,12 @@ export class PlaylistEditCtrl {
     this.filteredTags = _.reject(this.tagresult, tag => {
       return _.find(this.playlistItems, listPlaylistItem => {
         return listPlaylistItem.value === tag.term;
+      });
+    });
+
+    this.filteredVars = _.reject(this.varResult, vari => {
+      return _.find(this.playlistItems, listPlaylistItem => {
+        return listPlaylistItem.title === vari.name;
       });
     });
   }
@@ -134,20 +146,25 @@ export class PlaylistEditCtrl {
   }
 
   selectDashForVarPlaylist(dashboard) {
-    this.dashForVarPlaylist.push(dashboard);
+    this.selectedDashForVarPlaylist = dashboard;
     this.backendSrv.get('/api/dashboards/uid/' + dashboard.uid).then(result => {
-      this.playlistVars = result.dashboard.templating.list;
-      console.log(result.dashboard.templating.list);
+      this.varResult = result.dashboard.templating.list;
+      this.filterFoundPlaylistItems();
     });
   }
 
   removeDashForVarPlaylist() {
-    this.dashForVarPlaylist.pop();
+    this.selectedDashForVarPlaylist = null;
+    this.playlistItems.length = 0;
   }
 
   addVarAsPlaylistItem(playlistItem) {
-    console.log(playlistItem);
-    console.log(this.dashForVarPlaylist[0]);
+    playlistItem.value = this.selectedDashForVarPlaylist.uid;
+    playlistItem.type = 'var_by_dashboard';
+    playlistItem.order = this.playlistItems.length + 1;
+    playlistItem.title = playlistItem.name;
+    this.playlistItems.push(playlistItem);
+    this.filterFoundPlaylistItems();
   }
 }
 

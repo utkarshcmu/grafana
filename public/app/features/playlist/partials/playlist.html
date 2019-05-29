@@ -17,11 +17,12 @@
 			<input type="text" required ng-model="ctrl.playlist.interval" placeholder="5m" class="gf-form-input max-width-21">
 		</div>
 		<div class="gf-form">
-                        <span class="gf-form-label width-7">Type</span>
-                	<select class="gf-form-input max-width-21" ng-model="ctrl.playlist.type" ng-options="f.value as f.name for f in ctrl.playlistTypes"></select>
+            <span class="gf-form-label width-7">Type</span>
+            <select class="gf-form-input max-width-21" ng-model="ctrl.playlist.type" ng-options="f.value as f.name for f in ctrl.playlistTypes"></select>
 		</div>
 	</div>
 
+	<!-- HTML view for Dashboard based playlist -->
 	<div class="gf-form-group" ng-if="ctrl.playlist.type == 'dash'">
 		<h3 class="page-headering">Dashboards</h3>
 
@@ -96,12 +97,13 @@
 		</div>
 	</div>
 
+	<!-- HTML view for Variable based playlist -->
 	<div class="gf-form-group" ng-if="ctrl.playlist.type == 'vari'">
 		<h3 class="page-headering">Dashboard</h3>
 			<table class="filter-table playlist-available-list">
-			<tr ng-repeat="dashboard in ctrl.dashForVarPlaylist">
+			<tr ng-if="ctrl.selectedDashForVarPlaylist != null">
 				<td>
-					<i class="gicon gicon-dashboard"></i>&nbsp;&nbsp;{{dashboard.title}}
+					<i class="gicon gicon-dashboard"></i>&nbsp;&nbsp;{{ctrl.selectedDashForVarPlaylist.title}}
 				</td>
 
 				<td class="selected-playlistitem-settings">
@@ -110,13 +112,13 @@
 					</button>
 				</td>
 			</tr>
-			<tr ng-if="ctrl.dashForVarPlaylist.length === 0">
+			<tr ng-if="ctrl.selectedDashForVarPlaylist === null">
 				<td><em>First select the dashboard which has at least 1 template variable.</em></td>
 			</tr>
 		</table>
 	</div>
 
-	<div class="gf-form-group" ng-if="ctrl.playlist.type == 'vari' && ctrl.dashForVarPlaylist.length === 0">
+	<div class="gf-form-group" ng-if="ctrl.playlist.type == 'vari' && ctrl.selectedDashForVarPlaylist === null">
 		<h3 class="page-headering">Add dashboard</h3>
 		<playlist-search class="playlist-search-container" search-started="ctrl.searchStarted(promise)"></playlist-search>
 
@@ -139,35 +141,38 @@
 		</div>
 	</div>
 
-	<div class="gf-form-group" ng-if="ctrl.playlist.type == 'vari' && ctrl.dashForVarPlaylist.length > 0 && ctrl.playlistVars.length > 0">
+	<div class="gf-form-group" ng-if="ctrl.playlist.type == 'vari' && ctrl.selectedDashForVarPlaylist != null">
 		<h3 class="page-headering">Variables</h3>
+		<div ng-if="ctrl.selectedDashForVarPlaylist != null">
 			<table class="filter-table playlist-available-list">
-			<tr ng-repeat="playlistItem in ctrl.playlistItems">
-				<td ng-if="playlistItem.type === 'vars_by_dashboard'">
-					<i class="gicon gicon-dashboard"></i>&nbsp;&nbsp;{{playlistItem.title}}
-				</td>
-				<td class="selected-playlistitem-settings">
-					<button class="btn btn-inverse btn-small" ng-hide="$first" ng-click="ctrl.movePlaylistItemUp(playlistItem)">
+				<tr ng-repeat="playlistItem in ctrl.playlistItems">
+					<td ng-if="playlistItem.type === 'var_by_dashboard'">
+						<i class="gicon gicon-dashboard"></i>&nbsp;&nbsp;{{playlistItem.title}}
+					</td>
+					<td class="selected-playlistitem-settings">
+						<button class="btn btn-inverse btn-small" ng-hide="$first" ng-click="ctrl.movePlaylistItemUp(playlistItem)">
 						<i class="fa fa-arrow-up"></i>
-					</button>
-					<button class="btn btn-inverse btn-small" ng-hide="$last" ng-click="ctrl.movePlaylistItemDown(playlistItem)">
+						</button>
+						<button class="btn btn-inverse btn-small" ng-hide="$last" ng-click="ctrl.movePlaylistItemDown(playlistItem)">
 						<i class="fa fa-arrow-down"></i>
-					</button>
-					<button class="btn btn-inverse btn-small" ng-click="ctrl.removePlaylistItem(playlistItem)">
+						</button>
+						<button class="btn btn-inverse btn-small" ng-click="ctrl.removePlaylistItem(playlistItem)">
 						<i class="fa fa-remove"></i>
-					</button>
-				</td>
-			</tr>
-			<tr ng-if="ctrl.playlistItems.length === 0">
-				<td><em>Playlist is empty, add variables below.</em></td>
-			</tr>
-		</table>
+						</button>
+					</td>
+				</tr>
+				<tr ng-if="ctrl.playlistItems.length === 0">
+					<td><em>Playlist is empty, add variables below.</em></td>
+				</tr>
+			</table>
+		</div>
 	</div>
 
-	<div class="gf-form-group" ng-if="ctrl.playlist.type == 'vari' && ctrl.dashForVarPlaylist.length > 0">
+	<div class="gf-form-group" ng-if="ctrl.playlist.type == 'vari'">
 		<h3 class="page-headering">Add variables</h3>
+		<div ng-if="ctrl.selectedDashForVarPlaylist != null">
 		<table class="filter-table playlist-available-list">
-			<tr ng-repeat="playlistItem in ctrl.playlistVars" ng-if="ctrl.playlistVars.length > 0">
+			<tr ng-repeat="playlistItem in ctrl.filteredVars" ng-if="ctrl.filteredVars.length > 0">
 				<td>
 					<i class="gicon gicon-dashboard"></i>&nbsp;&nbsp;{{playlistItem.name}}
 				</td>
@@ -178,10 +183,11 @@
 					</button>
 				</td>
 			</tr>
-			<tr ng-if="ctrl.playlistVars.length === 0">
-				<td><em>No template variables on this dashboard. Please select another dashboard.</em></td>
+			<tr ng-if="ctrl.filteredVars.length === 0"> <!-- TODO: Change message for different scenarios -->
+				<td><em>No available template variables to add on this dashboard. Please select another dashboard.</em></td>
 			</tr>
 		</table>
+		</div>
 	</div>
 
 	<div class="clearfix"></div>
