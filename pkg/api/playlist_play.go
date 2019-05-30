@@ -84,6 +84,7 @@ func LoadPlaylistDashboards(orgID int64, signedInUser *m.SignedInUser, playlistI
 			dashboardByTag = append(dashboardByTag, i.Value)
 			dashboardTagOrder[i.Value] = i.Order
 		}
+
 	}
 
 	result := make(dtos.PlaylistDashboardsSlice, 0)
@@ -93,5 +94,34 @@ func LoadPlaylistDashboards(orgID int64, signedInUser *m.SignedInUser, playlistI
 	result = append(result, populateDashboardsByTag(orgID, signedInUser, dashboardByTag, dashboardTagOrder)...)
 
 	sort.Sort(result)
+	return result, nil
+}
+
+func LoadPlaylistVarsByDashboard(orgID int64, signedInUser *m.SignedInUser, playlistID int64) (dtos.PlaylistVarsByDashboard, error) {
+	var result dtos.PlaylistVarsByDashboard
+	playlistItems, _ := LoadPlaylistItems(playlistID)
+
+	varByDashboard := make([]string, 0)
+	var dashboardUid string
+
+	for _, i := range playlistItems {
+		varByDashboard = append(varByDashboard, i.Title)
+		dashboardUid = i.Value
+	}
+
+	dashboardQuery := m.GetDashboardQuery{Uid: dashboardUid}
+	if err := bus.Dispatch(&dashboardQuery); err != nil {
+		return result, err
+	}
+
+	result = dtos.PlaylistVarsByDashboard{
+		Id:    dashboardQuery.Result.Id,
+		Slug:  dashboardQuery.Result.Slug,
+		Title: dashboardQuery.Result.Title,
+		Uri:   "db/" + dashboardQuery.Result.Slug,
+		Url:   m.GetDashboardUrl(dashboardUid, dashboardQuery.Result.Slug),
+		Vars:  varByDashboard,
+	}
+
 	return result, nil
 }

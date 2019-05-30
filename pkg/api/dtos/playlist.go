@@ -11,6 +11,15 @@ type PlaylistDashboard struct {
 
 type PlaylistDashboardsSlice []PlaylistDashboard
 
+type PlaylistVarsByDashboard struct {
+	Id    int64    `json:"id"`
+	Slug  string   `json:"slug"`
+	Title string   `json:"title"`
+	Uri   string   `json:"uri"`
+	Url   string   `json:"url"`
+	Vars  []string `json:"vars"`
+}
+
 func (slice PlaylistDashboardsSlice) Len() int {
 	return len(slice)
 }

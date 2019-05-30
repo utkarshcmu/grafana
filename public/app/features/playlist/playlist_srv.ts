@@ -89,11 +89,18 @@ export class PlaylistSrv {
     appEvents.emit('playlist-started');
 
     return this.backendSrv.get(`/api/playlists/${playlistId}`).then(playlist => {
-      return this.backendSrv.get(`/api/playlists/${playlistId}/dashboards`).then(dashboards => {
-        this.dashboards = dashboards;
-        this.interval = kbn.interval_to_ms(playlist.interval);
-        this.next();
-      });
+      if (playlist.type === 'dash') {
+        return this.backendSrv.get(`/api/playlists/${playlistId}/dashboards`).then(dashboards => {
+          this.dashboards = dashboards;
+          this.interval = kbn.interval_to_ms(playlist.interval);
+          this.next();
+        });
+      } else if (playlist.type === 'vari') {
+        return this.backendSrv.get(`/api/playlists/${playlistId}/vars`).then(varsByDashboard => {
+          console.log(varsByDashboard);
+          // TODO:: Generate URLs from Vars
+        });
+      }
     });
   }
 

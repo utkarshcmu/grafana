@@ -138,6 +138,17 @@ func GetPlaylistDashboards(c *m.ReqContext) Response {
 	return JSON(200, playlists)
 }
 
+func GetPlaylistVarsByDashboard(c *m.ReqContext) Response {
+	playlistID := c.ParamsInt64(":id")
+
+	playlists, err := LoadPlaylistVarsByDashboard(c.OrgId, c.SignedInUser, playlistID)
+	if err != nil {
+		return Error(500, "Could not load vars by dashboard", err)
+	}
+
+	return JSON(200, playlists)
+}
+
 func DeletePlaylist(c *m.ReqContext) Response {
 	id := c.ParamsInt64(":id")
 

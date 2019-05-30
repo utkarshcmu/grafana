@@ -321,6 +321,7 @@ func (hs *HTTPServer) registerRoutes() {
 			playlistRoute.Get("/:id", ValidateOrgPlaylist, Wrap(GetPlaylist))
 			playlistRoute.Get("/:id/items", ValidateOrgPlaylist, Wrap(GetPlaylistItems))
 			playlistRoute.Get("/:id/dashboards", ValidateOrgPlaylist, Wrap(GetPlaylistDashboards))
+			playlistRoute.Get("/:id/vars", ValidateOrgPlaylist, Wrap(GetPlaylistVarsByDashboard))
 			playlistRoute.Delete("/:id", reqEditorRole, ValidateOrgPlaylist, Wrap(DeletePlaylist))
 			playlistRoute.Put("/:id", reqEditorRole, bind(m.UpdatePlaylistCommand{}), ValidateOrgPlaylist, Wrap(UpdatePlaylist))
 			playlistRoute.Post("/", reqEditorRole, bind(m.CreatePlaylistCommand{}), Wrap(CreatePlaylist))
